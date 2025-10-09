@@ -17,10 +17,6 @@ const AuthorForm = ({ onEdit, setOnEdit, getAutores }) => {
     }
   }, [onEdit])
 
-  useEffect(() => {
-    console.log("DEBUG 2", onEdit)
-  }, [onEdit])
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -28,10 +24,7 @@ const AuthorForm = ({ onEdit, setOnEdit, getAutores }) => {
       return toast.warn("Preencha todos os campos!")
     }
 
-    console.log("DEBUG entrou no submit")
-
     if (onEdit) {
-      console.log("DEBUG 2 no if", onEdit)
       await axios.put("http://localhost:8800/autores/" + onEdit.id,
         {
           nome: autor,
@@ -39,7 +32,6 @@ const AuthorForm = ({ onEdit, setOnEdit, getAutores }) => {
         }
       ).then(({ data }) => toast.success(data)).catch(({ data }) => toast.error(data))
     } else {
-      console.log("DEBUG 3 no else")
       await axios.post("http://localhost:8800/autores",
         {
           nome: autor,
