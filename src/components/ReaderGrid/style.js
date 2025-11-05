@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Table = styled.table`
   width: 100%;
@@ -6,7 +6,7 @@ export const Table = styled.table`
   padding: 20px;
   box-shadow: 0px 0px 5px #ccc;
   border-radius: 5px;
-  max-width: 900px;
+  max-width: 1500px;
   margin-top: 20px;
   margin-bottom: 100px;
   word-break: break-all;
@@ -26,7 +26,6 @@ export const Th = styled.th`
 
 export const Td = styled.td`
   padding-top: 15px;
-  text-align: ${(props) => (props.aligncenter ? "center" : "start")};
+  text-align: ${(props) => (props.alignCenter ? "center" : "start")};
   width: ${(props) => (props.width ? props.width : "auto")};
 `;
-

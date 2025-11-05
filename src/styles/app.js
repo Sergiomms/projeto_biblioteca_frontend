@@ -4,6 +4,7 @@ export const Container = styled.div`
   font-family: Arial, sans-serif;
   text-align: center;
   margin-top: 50px;
+  width: 900px;
 `;
 
 export const Title = styled.h1`

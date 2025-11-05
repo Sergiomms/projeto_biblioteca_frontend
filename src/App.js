@@ -7,6 +7,8 @@ import AuthorForm from "./components/AuthorForm";
 import Grid from "./components/Grid";
 import BookForm from './components/BookForm';
 import BookGrid from './components/BookGrid';
+import ReaderForm from "./components/ReaderForm";
+import ReaderGrid from "./components/ReaderGrid";
 import axios from "axios";
 
 function App() {
@@ -47,12 +49,38 @@ function App() {
     getLivros();
   }, []);
   
+  // --------- LEITORES ----------
+  const [showReaderForm, setShowReaderForm] = useState(false);
+  const [leitores, setLeitores] = useState([]);
+  const [editingReader, setEditingReader] = useState(null);
+
+  const getLeitores = async () => {
+    const res = await axios.get("http://localhost:8800/leitores");
+    setLeitores(res.data);
+  };
+
+  useEffect(() => {
+    getLeitores();
+  }, []);
+
+  const handleAdd = () => getLeitores();
+  const handleEdit = () => {
+    setEditingReader(null);
+    getLeitores();
+  };
+  const handleDelete = async (id) => {
+    await axios.delete(`http://localhost:8800/leitores/${id}`);
+    getLeitores();
+  };
+  
 
   return (
     <>
 
       <Container>
         <Title>Biblioteca Aurora</Title>
+
+        {/* --------- AUTORES --------- */}
         <Box onClick={() => setShowAuthorForm(!showAuthorForm)}>
           Cadastro de Autores
         </Box>
@@ -85,6 +113,27 @@ function App() {
           </>
         )}
 
+        {/* --------- LEITORES --------- */}
+        <Box onClick={() => setShowReaderForm(!showReaderForm)}>
+          Cadastro de Leitores
+        </Box>
+
+         {showReaderForm && (
+          <>
+            <ReaderForm
+              onAdd={handleAdd}
+              onEdit={handleEdit}
+              editingReader={editingReader}
+            />
+
+            <ReaderGrid
+              leitores={leitores}
+              onEdit={(reader) => setEditingReader(reader)}
+              onDelete={handleDelete}
+            />
+          </>
+         )}
+      
       </Container>
       <ToastContainer autoClose={3000} position="top-left" />
       <GlobalStyle />
