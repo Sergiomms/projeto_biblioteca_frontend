@@ -9,11 +9,15 @@ import BookForm from './components/BookForm';
 import BookGrid from './components/BookGrid';
 import ReaderForm from "./components/ReaderForm";
 import ReaderGrid from "./components/ReaderGrid";
+import LoanForm from "./components/LoanForm";
+import LoanGrid from "./components/LoanGrid";
 import axios from "axios";
 
 function App() {
 
-   // --------- AUTORES ----------
+  // --------------------------------------------
+  //  AUTORES
+  // --------------------------------------------
   const [showAuthorForm, setShowAuthorForm] = useState(false);
   const [autores, setAutores] = useState([]);
   const [onEditAutor, setOnEditAutor] = useState(null);
@@ -25,13 +29,16 @@ function App() {
     } catch (error) {
       toast.error(error);
     }
-  }
+  };
 
   useEffect(() => {
     getAutores();
-  }, [setAutores])
+  }, []);
 
-  // --------- LIVROS ----------
+
+  // --------------------------------------------
+  //  LIVROS
+  // --------------------------------------------
   const [showBookForm, setShowBookForm] = useState(false);
   const [livros, setLivros] = useState([]);
   const [onEditLivro, setOnEditLivro] = useState(null);
@@ -48,8 +55,11 @@ function App() {
   useEffect(() => {
     getLivros();
   }, []);
-  
-  // --------- LEITORES ----------
+
+
+  // --------------------------------------------
+  //  LEITORES
+  // --------------------------------------------
   const [showReaderForm, setShowReaderForm] = useState(false);
   const [leitores, setLeitores] = useState([]);
   const [editingReader, setEditingReader] = useState(null);
@@ -72,11 +82,31 @@ function App() {
     await axios.delete(`http://localhost:8800/leitores/${id}`);
     getLeitores();
   };
-  
+
+
+  // --------------------------------------------
+  //  EMPRÉSTIMOS
+  // --------------------------------------------
+  const [showLoanForm, setShowLoanForm] = useState(false);
+  const [loans, setLoans] = useState([]);
+  const [onEditLoan, setOnEditLoan] = useState(null);
+
+  const getLoans = async () => {
+    try {
+      const res = await axios.get("http://localhost:8800/emprestimos");
+      setLoans(res.data);
+    } catch (error) {
+      toast.error("Erro ao carregar empréstimos");
+    }
+  };
+
+  useEffect(() => {
+    getLoans();
+  }, []);
+
 
   return (
     <>
-
       <Container>
         <Title>Biblioteca Aurora</Title>
 
@@ -87,8 +117,16 @@ function App() {
 
         {showAuthorForm && (
           <>
-            <AuthorForm onEdit={onEditAutor} setOnEdit={setOnEditAutor} getAutores={getAutores}/>
-            <Grid autores={autores} setAutores={setAutores} setOnEdit={setOnEditAutor} />
+            <AuthorForm
+              onEdit={onEditAutor}
+              setOnEdit={setOnEditAutor}
+              getAutores={getAutores}
+            />
+            <Grid
+              autores={autores}
+              setAutores={setAutores}
+              setOnEdit={setOnEditAutor}
+            />
           </>
         )}
 
@@ -118,7 +156,7 @@ function App() {
           Cadastro de Leitores
         </Box>
 
-         {showReaderForm && (
+        {showReaderForm && (
           <>
             <ReaderForm
               onAdd={handleAdd}
@@ -132,12 +170,35 @@ function App() {
               onDelete={handleDelete}
             />
           </>
-         )}
-      
+        )}
+
+        {/* --------- EMPRÉSTIMOS --------- */}
+        <Box onClick={() => setShowLoanForm(!showLoanForm)}>
+          Cadastro de Empréstimos
+        </Box>
+
+        {showLoanForm && (
+          <>
+            <LoanForm
+              onEdit={onEditLoan}
+              setOnEdit={setOnEditLoan}
+              getEmprestimos={getLoans}
+              livros={livros}
+              leitores={leitores}
+            />
+
+            <LoanGrid
+              loans={loans}
+              setLoans={setLoans}
+              setOnEdit={setOnEditLoan}
+            />
+          </>
+        )}
+
       </Container>
+
       <ToastContainer autoClose={3000} position="top-left" />
       <GlobalStyle />
-
     </>
   );
 }
